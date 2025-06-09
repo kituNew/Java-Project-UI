@@ -22,30 +22,24 @@ struct Vacancy: Hashable, Codable, Equatable, Identifiable {
     var count: Int
     
     static func extractSalary(from salaryString: String) -> Double? {
-        // Определяем валюту
         let lowercased = salaryString.lowercased()
         let isDollar = salaryString.contains("$") || lowercased.contains("доллар") || lowercased.contains("usd")
         let isEuro = salaryString.contains("€") || lowercased.contains("евро") || lowercased.contains("eur")
         let isRubles = !isDollar && !isEuro
         
-        // 1. Попытка найти числа с разделителями (для всех валют)
         var numbers = extractNumbersWithSeparators(from: salaryString)
         
-        // 2. Для рублей, если не нашли чисел - пробуем склеить все цифры
         if isRubles && numbers.isEmpty {
             numbers = extractNumbersByCombining(from: salaryString)
         }
         
         guard !numbers.isEmpty else { return nil }
         
-        // Курсы валют
         let dollarRate = 78.5
         let euroRate = 85.2
         
-        // Вычисляем среднее значение
         let average = numbers.reduce(0, +) / Double(numbers.count)
         
-        // Конвертируем если нужно
         if isDollar {
             return average * dollarRate
         } else if isEuro {
@@ -78,7 +72,6 @@ struct Vacancy: Hashable, Codable, Equatable, Identifiable {
         let allDigits = string
             .replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
         
-        // Разбиваем на числа по 3-6 цифр (разумные пределы для зарплат)
         let pattern = "\\d{3,6}"
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
         

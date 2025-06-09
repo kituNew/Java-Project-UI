@@ -10,7 +10,6 @@ import SwiftUI
 struct SortingSheetView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: ViewModelOfVacancies
-    //private var shared = SortingSheetView()
 
     enum SortOption: String, CaseIterable {
         case none = "Не сортировать"
